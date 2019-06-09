@@ -11,7 +11,7 @@ function isDigit(ch) {
 }
 
 function isLetter(ch) {
-    return /[a-z]/i.test(ch);
+    return /[a-z]/i.test(ch) || ch === "θ" || ch === "π";
 }
 
 function isOperator(ch) {
@@ -167,7 +167,7 @@ function tokenize(str) {
                 result.splice(i + 3, 0, new Token("Right Parenthesis", ")"));
             }
         }
-        if ((result[i].type === "Literal" || result[i].type === "Right Parenthesis") && (result[i + 1].type !== "Operator" && result[i + 1].type !== "Right Parenthesis")) {
+        if ((result[i].type === "Literal" || result[i].type === "Right Parenthesis" || result[i].type === "Variable") && (result[i + 1].type !== "Operator" && result[i + 1].type !== "Right Parenthesis")) {
             result.splice(i + 1, 0, new Token("Operator", "*"));
         }
         if ((result[i].type === "Function" || result[i].name === "/") && (result[i + 1].type === "Function" || result[i + 1].name === "/")) {
@@ -180,7 +180,7 @@ function tokenize(str) {
         parenthbuffer--;
     }
     result.push(new Token("Right Parenthesis", ")"));
-    while (leftparenthbuff > 0) {
+    while (leftparenthbuff > 1) {
         result.push(new Token("Right Parenthesis", ")"));
         leftparenthbuff--;
     }
